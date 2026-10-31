@@ -1,3 +1,13 @@
+import os as _os
+
+
+def _required_env(name):
+    value = _os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Set {name} before running this script.")
+    return value
+
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,7 +21,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']
 # 也可以设置字体大小
 plt.rcParams['font.size'] = 12
 # 初始化Tushare
-pro = ts.pro_api('48c54212788b6a040d89de4ee5810744d936b44c2423302761f3b254')
+pro = ts.pro_api(_required_env("TUSHARE_TOKEN"))
 
 # 数据处理函数
 ts_code='000300.SH'
@@ -57,7 +67,7 @@ data_zscore = data_zscore[2:]
 data_zscore['right-skewed_z-score'] = data_zscore['beta'] * data_zscore['Modified_zscore']
 data_zscore = data_zscore.reset_index(drop=False)
 
-# 以下是你的交易策略和回测代码
+# Trading strategy and backtest
 buy_thre = 0.7
 sell_thre=-0.7
 data_zscore['flag'] = 0  # 买卖标记，买入：1，卖出：-1

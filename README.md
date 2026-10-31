@@ -1,72 +1,27 @@
 # RSRS
-Reproduction of Everbright Securities' Market Time Based on Resistance Support Relative Strength
 
-Here is a **GitHub README** based on the **RSRS (Resistance Support Relative Strength) Market Timing Model** from the uploaded report.
+Research reproduction of Everbright Securities' Resistance-Support Relative Strength (RSRS) market-timing model. The indicator regresses rolling high prices on low prices and uses the slope, standardized slope, fit-adjusted score, and right-skewed score in historical trading rules.
 
----
+## Implementations
 
-# 📌 **RSRS Market Timing Strategy: Resistance-Support Relative Strength (RSRS) Indicator**
+`RSRS_code/` contains slope, Z-score, modified-score, and right-skewed-score scripts; transaction-cost and price/volume filters; and parameter-grid comparisons. Scripts specify the index, sample dates, regression window, standardization window, and entry/exit thresholds directly.
 
-This repository provides a full implementation of the **Resistance-Support Relative Strength (RSRS) model**, a **quantitative market timing strategy** based on technical analysis of **support and resistance levels**. The RSRS indicator dynamically assesses **relative strength shifts** between support and resistance levels, offering a **leading indicator** for market trend predictions.
+The long-only rules enter above the selected buy threshold and exit below the selected sell threshold. The code computes strategy returns and comparisons with the selected index. The index, dates, thresholds, regression/standardization windows, and cost settings are defined in each script.
 
-## 🔹 **Project Overview**  
-Traditional **moving average (MA) and MACD indicators** often exhibit significant lag, reducing their predictive effectiveness in volatile markets. The **RSRS indicator** innovates by considering the **relative strength of support vs. resistance** as a **dynamic variable**, rather than static levels. This allows for **more responsive and predictive market timing signals**.
+## Reported project summary
 
-### **Why RSRS?**
-✔️ **Captures real-time market trend shifts** by evaluating resistance vs. support strength  
-✔️ **Reduces lag compared to traditional technical indicators** (e.g., MA, MACD)  
-✔️ **Effective in both bull and bear markets**, predicting trend reversals early  
-✔️ **High correlation (75%) with future 2-week returns**, making it a reliable timing tool  
+Historical results reported for the configurations below:
 
----
+| Index and period | Total return | Annualized return | Sharpe ratio | Maximum drawdown |
+|---|---:|---:|---:|---:|
+| CSI 300, 2005–2017 | 1,573.60% | 25.82% | 1.20 | 50.49% |
+| SSE 50 | 1,432.36% | 24.84% | — | — |
+| CSI 500 | 2,898.93% | 32.39% | — | — |
 
-## 🚀 **Workflow**  
+The project also reports a 75% correlation with future two-week returns. Forward-return correlation calculations are in `RSRS_code/RSRS_Modified_Zscore.py`, with the index, sample dates, and return window defined in the source.
 
-1️⃣ **Data Collection & Preprocessing**  
-- Extracts **highs and lows** of stock indices (e.g., CSI 300, SSE 50, CSI 500)  
-- Computes **rolling regression slope (β)** to quantify **support-resistance strength**  
+## Configuration
 
-2️⃣ **RSRS Indicator Calculation**  
-- Uses **linear regression on N-day high/low prices**  
-- The slope (β) represents **relative strength**:  
-  ✔ **β > threshold** → Bullish signal (buy)  
-  ✔ **β < threshold** → Bearish signal (sell)  
+Set `TUSHARE_TOKEN` in the Python process environment for Tushare-backed scripts. Local dataset paths and, in some scripts, an external `backtest` module directory are configured in the source. That helper module and the full market datasets are not included. The four-byte `RSRS+打分.py` file is an empty experiment entry, not an implemented scoring variant.
 
-3️⃣ **Standardization & Bias Correction**  
-- Converts β into **Z-score (standard deviation-based scaling)**  
-- Implements **right-skewed standardization** for improved predictive power  
-
-4️⃣ **Market Timing Strategy Implementation**  
-- **Long-Only Strategy**: Buy when Z-score > S1, sell when Z-score < S2  
-- **Long-Short Strategy**: Take short positions when bearish signals emerge  
-
-5️⃣ **Performance Optimization**  
-- **Price & volume filters** to **reduce false signals** and enhance profitability  
-- **Multi-market validation** across different indices for robustness  
-
----
-
-## 📈 **Results & Performance**  
-
-✔️ **RSRS right-skewed Z-score strategy** applied to **CSI 300 (2005-2017)**:  
-   - **Total return**: **1,573.60%**  
-   - **Annualized return**: **25.82%**  
-   - **Sharpe ratio**: **1.20**  
-   - **Max drawdown**: **50.49%**  
-
-✔️ **RSRS strategy on other indices**:  
-   - **SSE 50 Index**: **1,432.36% return, 24.84% annualized**  
-   - **CSI 500 Index**: **2,898.93% return, 32.39% annualized**  
-
-🏆 **Key Features**  
-✔ **High-frequency, dynamic market timing**  
-✔ **Combines support-resistance analysis with statistical modeling**  
-✔ **Outperforms traditional technical indicators (MA, MACD, Bollinger Bands)**  
-✔ **Python-based implementation using Pandas, NumPy, Scikit-learn**  
-
----
-
-## 📬 **Contact & Citation**  
-If you find this project useful, feel free to reach out via **tenghanz@usc.edu** or contribute to the repository! 🚀  
-
----
+Reference: Everbright Securities' RSRS market-timing report. Contact: **tenghanz@usc.edu**.

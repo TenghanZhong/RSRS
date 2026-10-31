@@ -3,6 +3,16 @@
 # 合理的信号。
 ###这一方法可以过滤误判信号，减少回撤，增大超额收益
 
+import os as _os
+
+
+def _required_env(name):
+    value = _os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Set {name} before running this script.")
+    return value
+
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -10,7 +20,7 @@ from sklearn.linear_model import LinearRegression
 import datetime
 import qstock as qs
 import tushare as ts
-pro = ts.pro_api('48c54212788b6a040d89de4ee5810744d936b44c2423302761f3b254')
+pro = ts.pro_api(_required_env("TUSHARE_TOKEN"))
 
 
 #因为均值变动大，阈值变动大，改用标准分法

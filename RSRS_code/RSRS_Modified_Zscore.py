@@ -7,13 +7,23 @@
 
 
 
+import os as _os
+
+
+def _required_env(name):
+    value = _os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Set {name} before running this script.")
+    return value
+
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import datetime
 import tushare as ts
-pro = ts.pro_api('d689cb3c1d8c8a618e49ca0bb64f4d6de2f70e28ab5f76a867b31ac7')
+pro = ts.pro_api(_required_env("TUSHARE_TOKEN"))
 
 
 #因为均值变动大，阈值变动大，改用标准分法
@@ -187,7 +197,7 @@ data_zscore['future_return'] = data_zscore['close'].pct_change(periods=10).shift
 
 # 划分标准分区间
 bins = np.arange(-3,4.2,0.3)
-labels = np.arange(-2.85, 3.95, 0.3) # 区间标签,加0.15是为了将标签置于区间中央  如果你想将标签置于区间的中央，你可以在创建标签时加上区间宽度的一半。
+labels = np.arange(-2.85, 3.95, 0.3) # Labels at the centers of the 0.3-wide bins
 data_zscore['z_score_bin'] = pd.cut(data_zscore['Modified_zscore'], bins=bins, labels=labels)
 
 # 计算每个区间的平均收益率和上涨概率

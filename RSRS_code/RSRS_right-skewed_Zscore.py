@@ -8,6 +8,16 @@
 #因而总体来说，乘斜率可以达到右偏的效果。
 
 
+import os as _os
+
+
+def _required_env(name):
+    value = _os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Set {name} before running this script.")
+    return value
+
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -20,7 +30,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # Use SimHei font
 plt.rcParams['axes.unicode_minus'] = False  # Solve the problem of minus sign '-' display as square
 
 # 初始化Tushare
-pro = ts.pro_api('48c54212788b6a040d89de4ee5810744d936b44c2423302761f3b254')
+pro = ts.pro_api(_required_env("TUSHARE_TOKEN"))
 '20170301'
 # 数据处理函数
 #002594.XSHE比亚迪
@@ -67,7 +77,7 @@ data_zscore = data_zscore[2:]
 data_zscore['right-skewed_z-score'] = data_zscore['beta'] * data_zscore['Modified_zscore']
 data_zscore = data_zscore.reset_index(drop=False)
 
-# 以下是你的交易策略和回测代码
+# Trading strategy and backtest
 buy_thre = 0.7
 sell_thre=-0.7
 data_zscore['flag'] = 0  # 买卖标记，买入：1，卖出：-1
@@ -98,7 +108,7 @@ data_zscore.dropna(inplace=True)
 
 #回测程序执行
 #回测↓
-sys.path.append("F:\\BaiduSyncdisk\\pycharm_code\\回测框架")  # 使用目标文件夹的绝对路径替换此路径
+sys.path.append("F:\\BaiduSyncdisk\\pycharm_code\\回测框架")  # External backtest module directory
 from backtest import run_Timing_Strategy
 # 运行回测
 results = run_Timing_Strategy(data_zscore,ts_code)

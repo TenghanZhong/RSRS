@@ -1,6 +1,16 @@
 ###改进原理：斜率均值变动大，因而阈值设定成(u-1 std,u+ 1 std)不合理，
 #所以选择把斜率标准化处理，以方便比较
 
+import os as _os
+
+
+def _required_env(name):
+    value = _os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Set {name} before running this script.")
+    return value
+
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,7 +18,7 @@ from sklearn.linear_model import LinearRegression
 import datetime
 import qstock as qs
 import tushare as ts
-pro = ts.pro_api('48c54212788b6a040d89de4ee5810744d936b44c2423302761f3b254')
+pro = ts.pro_api(_required_env("TUSHARE_TOKEN"))
 
 exec(open('RSRS_slope.py',encoding='utf-8').read())  # 执行RSRS_slope文件中的代码
 
